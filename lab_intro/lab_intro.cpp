@@ -45,7 +45,7 @@ PNG grayscale(PNG image) {
  * is a total of `sqrt((3 * 3) + (4 * 4)) = sqrt(25) = 5` pixels away and
  * its luminance is decreased by 2.5% (0.975x its original value).  At a
  * distance over 160 pixels away, the luminance will always decreased by 80%.
- * 
+ *
  * The modified PNG is then returned.
  *
  * @param image A PNG object which holds the image data to be modified.
@@ -55,11 +55,29 @@ PNG grayscale(PNG image) {
  * @return The image with a spotlight.
  */
 PNG createSpotlight(PNG image, int centerX, int centerY) {
+  for (unsigned x = 0; x < image.width(); x++) {
+    for (unsigned y = 0; y < image.height(); y++) {
+      HSLAPixel & pixel = image.getPixel(x, y);
+
+      // `pixel` is a pointer to the memory stored inside of the PNG `image`,
+      // which means you're changing the image directly.  No need to `set`
+      // the pixel since you're directly changing the memory of the image.
+      int xint = (int) x;
+      int yint = (int) y;
+      double dist = sqrt( pow(xint-centerX, 2) + pow(yint-centerY, 2) );
+      if (dist >= 160)
+        pixel.l = pixel.l * 0.2;
+      else
+      {
+        double factor = dist * 0.005;
+        pixel.l = pixel.l * (1-factor);
+      }
+    }
+  }
 
   return image;
-  
 }
- 
+
 
 /**
  * Returns a image transformed to Illini colors.
@@ -73,9 +91,33 @@ PNG createSpotlight(PNG image, int centerX, int centerY) {
 **/
 PNG illinify(PNG image) {
 
+  for (unsigned x = 0; x < image.width(); x++) {
+    for (unsigned y = 0; y < image.height(); y++) {
+      HSLAPixel & pixel = image.getPixel(x, y);
+      // blue = 216, orange = 11
+      // `pixel` is a pointer to the memory stored inside of the PNG `image`,
+      // which means you're changing the image directly.  No need to `set`
+      // the pixel since you're directly changing the memory of the image.
+      double hue = pixel.h;
+      double blue = 216.0;
+      double orange = 11.0;
+      double bd1 = abs(hue-blue);
+      double bd2 = 360 - bd1;
+      double od1 = abs(hue-orange);
+      double od2 = 360 - od1;
+      double bdm = fmin(bd1,bd2);
+      double odm = fmin(od1,od2);
+      double md = fmin(bdm,odm);
+      if (md == bd1 || md == bd2)
+        pixel.h = blue;
+      else
+        pixel.h = orange;
+    }
+  }
+
   return image;
 }
- 
+
 
 /**
 * Returns an immge that has been watermarked by another image.
@@ -90,6 +132,24 @@ PNG illinify(PNG image) {
 * @return The watermarked image.
 */
 PNG watermark(PNG firstImage, PNG secondImage) {
+  unsigned mw = (unsigned) fmin(firstImage.width(), secondImage.width());
+  unsigned mh = (unsigned) fmin(firstImage.height(), secondImage.height());
+  for (unsigned x = 0; x < mw; x++) {
+    for (unsigned y = 0; y < mh; y++) {
+      HSLAPixel & pixel2 = secondImage.getPixel(x, y);
+      HSLAPixel & pixel1 = firstImage.getPixel(x,y);
 
+      // `pixel` is a pointer to the memory stored inside of the PNG `image`,
+      // which means you're changing the image directly.  No need to `set`
+      // the pixel since you're directly changing the memory of the image.
+      if (pixel2.l == 1)
+      {
+        if (pixel1.l + 0.2 > 1)
+          pixel1.l = 1;
+        else
+          pixel1.l += 0.2;
+      }
+    }
+  }
   return firstImage;
 }
