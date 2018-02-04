@@ -19,6 +19,9 @@ Allocator::Allocator(const string& studentFile, const string& roomFile)
     createLetterGroups();
     loadStudents(studentFile);
     loadRooms(roomFile);
+/*    cout << "student count: " << studentCount << endl;
+    cout << "room count: " << roomCount << endl;
+    cout << "ctor passed" << endl;*/
 }
 
 void Allocator::createLetterGroups()
@@ -47,14 +50,15 @@ void Allocator::loadRooms(const string& file)
 {
     // Read in rooms
     fileio::loadRooms(file);
+    roomCount = fileio::getNumRooms();
     rooms = new Room[roomCount];
 
     totalCapacity = 0;
     int i = 0;
     while (fileio::areMoreRooms()) {
-        i++;
         rooms[i] = fileio::nextRoom();
         totalCapacity += rooms[i].capacity;
+        i++;
     }
 }
 
@@ -120,4 +124,10 @@ Room* Allocator::largestOpening()
         }
     }
     return &rooms[index];
+}
+
+Allocator::~Allocator()
+{
+    delete[] rooms;
+    delete[] alpha;
 }
