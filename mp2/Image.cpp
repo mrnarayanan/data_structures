@@ -118,7 +118,10 @@ void Image::rotateColor(double factor)
       HSLAPixel & pixel = getPixel(x,y);
       int scale = (int) (pixel.h + factor);
       int mult = scale / 360;
-      pixel.h = (pixel.h + factor) - 360*mult;
+      if (pixel.h + factor < 0)
+        pixel.h = (pixel.h + factor + 360) - 360*mult;
+      else
+        pixel.h = (pixel.h + factor) - 360*mult;
     }
   }
 }
