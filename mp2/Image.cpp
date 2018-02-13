@@ -2,21 +2,6 @@
 
 using namespace cs225;
 
-/* create constructor with initializer list
-Image::Image() : PNG()
-{
-  // empty function body
-}
-Image::Image(unsigned width, unsigned height) : PNG(width, height)
-{
-  // empty function body
-}
-Image::~Image()
-{
-  // empty function body
-}
-*/
-
 void Image::lighten()
 {
   lighten(0.1);
@@ -169,10 +154,7 @@ void Image::scale(double scale)
       unsigned xi = (unsigned) (x * scw);
       unsigned yi = (unsigned) (y * sch);
       HSLAPixel & source = getPixel(xi,yi);
-      dest.h = source.h;
-      dest.s = source.s;
-      dest.l = source.l;
-      dest.a = source.a;
+      dest = source;
     }
   }
 
@@ -184,10 +166,7 @@ void Image::scale(double scale)
     {
       HSLAPixel & source = img.getPixel(x,y);
       HSLAPixel & dest = getPixel(x,y);
-      dest.h = source.h;
-      dest.s = source.s;
-      dest.l = source.l;
-      dest.a = source.a;
+      dest = source;
     }
   }
 
@@ -213,10 +192,7 @@ void Image::scale(unsigned h, unsigned w)
       unsigned xi = (unsigned) (x * scw);
       unsigned yi = (unsigned) (y * sch);
       HSLAPixel & source = getPixel(xi,yi);
-      dest.h = source.h;
-      dest.s = source.s;
-      dest.l = source.l;
-      dest.a = source.a;
+      dest = source;
     }
   }
 
@@ -228,10 +204,7 @@ void Image::scale(unsigned h, unsigned w)
     {
       HSLAPixel & source = img.getPixel(x,y);
       HSLAPixel & dest = getPixel(x,y);
-      dest.h = source.h;
-      dest.s = source.s;
-      dest.l = source.l;
-      dest.a = source.a;
+      dest = source;
     }
   }
 

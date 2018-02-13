@@ -14,6 +14,8 @@ using namespace cs225;
 class Image : public PNG
 {
 public:
+//  Image();
+//  Image(Image const & other);
   void lighten();
   void lighten(double);
   void darken();
