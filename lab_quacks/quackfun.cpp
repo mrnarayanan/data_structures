@@ -25,16 +25,27 @@ namespace QuackFun {
 template <typename T>
 T sum(stack<T>& s)
 {
-
     // Your code here
-    return T(); // stub return value (0 for primitive types). Change this!
+    if (s.size() == 0)
+      return 0;
+    else
+    {
+      T topp = s.top();
+      s.pop();
+      T ans = topp + sum<T>(s);
+      s.push(topp);
+      return ans;
+    }
+
+
+//    return T(); // stub return value (0 for primitive types). Change this!
                 // Note: T() is the default value for objects, and 0 for
                 // primitive types
 }
 
 /**
- * Checks whether the given string (stored in a queue) has balanced brackets. 
- * A string will consist of 
+ * Checks whether the given string (stored in a queue) has balanced brackets.
+ * A string will consist of
  * square bracket characters, [, ], and other characters. This function will return
  * true if and only if the square bracket characters in the given
  * string are balanced. For this to be true,
@@ -49,9 +60,25 @@ T sum(stack<T>& s)
  */
 bool isBalanced(queue<char> input)
 {
-
     // @TODO: Make less optimistic
-    return true;
+    stack<char> checker;
+    while (input.empty() != true)
+    {
+      if (input.front() == '[')
+        checker.push('1');
+      else if (input.front() == ']')
+      {
+        if (checker.empty())
+          return false;
+        else
+          checker.pop();
+      }
+      input.pop();
+    }
+    if (checker.empty())
+      return true;
+    else
+      return false;
 }
 
 /**
