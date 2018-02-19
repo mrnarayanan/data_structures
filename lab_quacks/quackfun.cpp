@@ -4,6 +4,8 @@
  *  stacks and queues portion of the lab.
  */
 
+#include <iostream>
+
 namespace QuackFun {
 
 /**
@@ -97,9 +99,67 @@ template <typename T>
 void scramble(queue<T>& q)
 {
     stack<T> s;
-    // optional: queue<T> q2;
+    queue<T> q2;
+    queue<T> ro;
 
     // Your code here
+    int block = 1;
+    unsigned qsz = q.size();
+    while (true)
+    {
+      for (int i = 0; i < block; i++)
+      {
+        if (q.empty())
+          goto label1;
+        if (block % 2 == 0) // even blocks
+        {
+          s.push(q.front());
+        }
+
+        else
+        {
+          q2.push(q.front());
+        }
+        q.pop();
+      }
+
+      block++;
+
+      while (s.empty() != true)
+      {
+        ro.push(s.top());
+        s.pop();
+      }
+    }
+
+    label1:
+
+    while (s.empty() != true)
+    {
+      ro.push(s.top());
+      s.pop();
+    }
+
+    block = 1;
+    while (true)
+    {
+      for (int i = 0; i < block; i++)
+      {
+        if (q.size() == qsz)
+          return;
+        if (block % 2 == 0) // even blocks
+        {
+          q.push(ro.front());
+          ro.pop();
+        }
+        else
+        {
+          q.push(q2.front());
+          q2.pop();
+        }
+      }
+      block++;
+    }
 }
 
 /**
