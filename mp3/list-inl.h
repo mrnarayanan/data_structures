@@ -50,6 +50,8 @@ void List<T>::insertFront(T const & ndata) {
   head_ = add;
   if (length_ == 0)
     tail_ = add;
+  if (add->next != NULL)
+    add->next->prev = add;
   length_++;
 }
 
@@ -68,6 +70,8 @@ void List<T>::insertBack(const T & ndata) {
   tail_ = add;
   if (length_ == 0)
     head_ = add;
+  if (add->prev != NULL)
+    add->prev->next = add;
   length_++;
 }
 
@@ -95,10 +99,10 @@ void List<T>::reverse(ListNode *& startPoint, ListNode *& endPoint) {
   /// @todo Graded in MP3.1
   if (startPoint == NULL || endPoint == NULL)
     return;
-  if (head_ == startPoint)
-    head_ = endPoint;
-  if (tail_ == endPoint)
-    tail_ = startPoint;
+  // if (head_ == startPoint)
+  //   head_ = endPoint;
+  // if (tail_ == endPoint)
+  //   tail_ = startPoint;
   ListNode * front = startPoint;
   ListNode * back = endPoint;
   ListNode * temp = endPoint;
@@ -108,15 +112,38 @@ void List<T>::reverse(ListNode *& startPoint, ListNode *& endPoint) {
   startPoint = temp;
   while (front->prev != back && front != back)
   {
-    temp = front->next;
-    temp2 = front->prev;
-    temp3 = back->prev;
-    front->next = back->next;
-    front->prev = back->prev;
-    back->next = temp;
-    back->prev = temp2;
-    front = temp;
-    back = temp3;
+    if (front->next == back) // special case final step even # nodes
+    {
+      front->next = back->next;
+      back->prev = front->prev;
+      back->next = front;
+      front->prev = back;
+      if (back->prev != NULL)
+        back->prev->next = back;
+      if (front->next != NULL)
+        front->next->prev = front;
+      break;
+    }
+    else
+    {
+      temp = front->next;
+      temp2 = front->prev;
+      temp3 = back->prev;
+      front->next = back->next;
+      front->prev = back->prev;
+      back->next = temp;
+      back->prev = temp2;
+      if (front->prev != NULL)
+        front->prev->next = front;
+      if (back->prev != NULL)
+        back->prev->next = back;
+      if (front->next != NULL)
+        front->next->prev = front;
+      if (back->next != NULL)
+        back->next->prev = back;
+      front = temp;
+      back = temp3;
+    }
   }
 }
 
@@ -129,6 +156,32 @@ void List<T>::reverse(ListNode *& startPoint, ListNode *& endPoint) {
 template <class T>
 void List<T>::reverseNth(int n) {
   /// @todo Graded in MP3.1
+  if (n > length_)
+    reverse();
+  else
+  { // not working - fix this
+    ListNode * start = head_;
+    ListNode * end = start;
+    ListNode *temp1, *temp2;
+    int count = length_ / n; // integer division
+    for (int i=0; i < count; i++)
+    {
+      for (int j=0; j < n; j++)
+        end = end->next;
+      temp1 = start;
+      temp2 = end;
+      reverse(start, end);
+      start = temp1;
+      end = temp2;
+      start = end->next;
+      end = start;
+    }
+    if (length_ % n != 0)
+    {
+      end = tail_;
+      reverse(start, end);
+    }
+  }
 }
 
 /**
