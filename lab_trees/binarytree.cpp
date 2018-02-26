@@ -78,6 +78,31 @@ template <typename T>
 void BinaryTree<T>::mirror()
 {
     //your code here
+    if (root == NULL)
+      return;
+    else
+      mirror(root);
+}
+
+/**
+ * Flips the tree over a vertical axis, modifying the tree itself
+ *  Helper function for mirror()
+ */
+template <typename T>
+void BinaryTree<T>::mirror(Node* subRoot)
+{
+    //your code here
+    // use post order traversal
+    if (subRoot == NULL)
+      return;
+    else
+    {
+      mirror(subRoot->left);
+      mirror(subRoot->right);
+      Node * temp = subRoot->left;
+      subRoot->left = subRoot->right;
+      subRoot->right = temp;
+    }
 }
 
 /**
@@ -90,6 +115,8 @@ template <typename T>
 bool BinaryTree<T>::isOrderedIterative() const
 {
     // your code here
+    Node * curr = root;
+    
     return false;
 }
 
@@ -104,7 +131,37 @@ bool BinaryTree<T>::isOrderedRecursive() const
 {
 
     // your code here
-    return false;
+    return isOrderedRecursive(root);
+}
+
+/**
+ * isOrdered() function recursive version
+ * @return True if an in-order traversal of the tree would produce a
+ *  nondecreasing list output values, and false otherwise. \
+ * Helper function
+ */
+template <typename T>
+bool BinaryTree<T>::isOrderedRecursive(Node* subRoot) const
+{
+    // your code here
+    bool result = true;
+    if (subRoot == NULL)
+      return true;
+  //  bool one = isOrderedRecursive(subRoot->left) && isOrderedRecursive(subRoot->right);
+    if (subRoot->left == NULL && subRoot->right == NULL)
+      result = true;
+    else if (subRoot->left == NULL && subRoot->elem < subRoot->right->elem)
+      result = true;
+    else if (subRoot->right == NULL && subRoot->elem > subRoot->left->elem)
+      result = true;
+    else if (subRoot->elem > subRoot->left->elem && subRoot->elem < subRoot->right->elem)
+      result = true;
+    else
+      result = false;
+      bool one = true;
+//    bool one = isOrderedRecursive(subRoot->left) && isOrderedRecursive(subRoot->right);
+//    std::cout << subRoot->elem << " " << result << " " << std::endl;
+    return (result && one);
 }
 
 /**
@@ -135,5 +192,3 @@ int BinaryTree<T>::sumDistances() const
     // your code here
     return -1;
 }
-
-

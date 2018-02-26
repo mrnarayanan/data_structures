@@ -3,6 +3,8 @@
  * Doubly Linked List (MP 3).
  */
 
+ #include <iostream>
+
 /**
  * Destroys the current List. This function should ensure that
  * memory does not leak on destruction of a list.
@@ -164,17 +166,32 @@ void List<T>::reverseNth(int n) {
     ListNode * end = start;
     ListNode *temp1, *temp2;
     int count = length_ / n; // integer division
-    for (int i=0; i < count; i++)
+    int i, j;
+    for (i=0; i < count; i++)
     {
-      for (int j=0; j < n; j++)
+      for (j=1; j < n; j++)
         end = end->next;
       temp1 = start;
       temp2 = end;
       reverse(start, end);
-      start = temp1;
-      end = temp2;
+      // start = temp1;
+      // end = temp2;
+      // if (end->next == NULL)
+      //   return;
+
       start = end->next;
       end = start;
+      ListNode * curr = head_;
+      while (curr->next != NULL)
+      {
+    //    std::cout << curr->data << " ";
+        curr = curr->next;
+      }
+      tail_ = curr;
+      // std::cout << std::endl;
+      // std::cout << "Head: " << head_->data << std::endl;
+      // std::cout << "Tail: " << tail_->data << std::endl;
+
     }
     if (length_ % n != 0)
     {

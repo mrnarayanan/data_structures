@@ -192,7 +192,7 @@ class List {
     // Provided Iterator Functions, don't remove
     #include "list-iter.h"
 
-  private:
+//  private:
     /*
      * Private member variables.
      *
