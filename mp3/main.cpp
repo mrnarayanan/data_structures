@@ -1,26 +1,28 @@
 #include "list.h"
 
 int main() {
-  List<int> mylist;
+  List<int> mylist, list2;
   mylist.insertBack(1);
   mylist.insertBack(2);
-  mylist.insertBack(3);
-  mylist.insertBack(4);
   mylist.insertBack(5);
-  mylist.insertBack(6);
   mylist.insertBack(7);
-  mylist.insertBack(8);
-  mylist.reverse();
+  mylist.insertBack(12);
+  mylist.insertBack(15);
+  mylist.insertBack(17);
+  mylist.insertBack(19);
+
+  list2.insertBack(8);
+  list2.insertBack(9);
+  list2.insertBack(16);
+  list2.insertBack(18);
+
   std::cout << std::endl;
-  mylist.reverse();
   mylist.print(std::cout);
   std::cout << std::endl;
-  std::cout << "Head: " << mylist.head_->data << std::endl;
-  std::cout << "Tail: " << mylist.tail_->data << std::endl;
-  mylist.reverseNth(4);
+  mylist.mergeWith(list2);
   mylist.print(std::cout);
   std::cout << std::endl;
-  std::cout << "Head: " << mylist.head_->data << std::endl;
-  std::cout << "Tail: " << mylist.tail_->data << std::endl;
+
+
   return 0;
 }
