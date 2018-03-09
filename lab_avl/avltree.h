@@ -20,6 +20,7 @@
 #include <vector>
 #include <sstream>
 #include <string>
+#include <algorithm>
 
 using namespace std;
 
@@ -203,6 +204,13 @@ class AVLTree
     int heightOrNeg1(const Node* node) const;
 
     /**
+     * Find balance factor of node
+     * @param node The node's balance to find
+     * @return The balance factor of the node
+     */
+     int find_balance(const Node* node) const;
+
+    /**
      * Swap the keys and values of two nodes.
      * @param first The first node to swap
      * @param second The node to swap with
@@ -214,6 +222,12 @@ class AVLTree
      * @param subRoot The current node in the recursion
      */
     Node* copy(const Node* subRoot);
+
+    /**
+     * Helper function to return IOP
+     * @param subRoot left child of node (for removal)
+     */
+    Node* get_IOP(Node* subRoot);
 
     /**
      * Private helper function for clear that clears beneath the parameter node.

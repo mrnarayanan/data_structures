@@ -17,8 +17,10 @@
  * @param tolerance If the current point is too different (difference larger than tolerance) with the start point,
  * it will not be included in this DFS
  */
-DFS::DFS(const PNG & png, const Point & start, double tolerance) {  
+DFS::DFS(const PNG & png, const Point & start, double tolerance) {
   /** @todo [Part 1] */
+  width = png.width();
+  height = png.height();
 }
 
 /**
@@ -42,6 +44,41 @@ ImageTraversal::Iterator DFS::end() {
  */
 void DFS::add(const Point & point) {
   /** @todo [Part 1] */
+  // right, below, left, above
+  Point pr(point.x + 1, point.y);
+  Point pb(point.x, point.y + 1);
+  Point pl(point.x - 1, point.y);
+  Point pa(point.x, point.y - 1);
+
+  // bounds checking
+  int count = 0;
+  if (point.x + 1 < width)
+  {
+    nextPoint.push(pr);
+    count++;
+  }
+  if (point.y + 1 < height)
+  {
+    nextPoint.push(pb);
+    count++;
+  }
+  if (point.x - 1 >= 0)
+  {
+    nextPoint.push(pl);
+    count++;
+  }
+  if (point.y - 1 >= 0)
+  {
+    nextPoint.push(pa);
+    count++;
+  }
+
+  for (int i = 0; i < count; i++) // execute 4 times
+  {
+    inTraversal.push(nextPoint.top());
+    nextPoint.pop();
+  }
+
 }
 
 /**
@@ -49,7 +86,9 @@ void DFS::add(const Point & point) {
  */
 Point DFS::pop() {
   /** @todo [Part 1] */
-  return Point(0, 0);
+  Point ret = inTraversal.top();
+  inTraversal.pop();
+  return ret;
 }
 
 /**
@@ -57,7 +96,8 @@ Point DFS::pop() {
  */
 Point DFS::peek() const {
   /** @todo [Part 1] */
-  return Point(0, 0);
+  Point ret = inTraversal.top();
+  return ret;
 }
 
 /**
@@ -65,5 +105,8 @@ Point DFS::peek() const {
  */
 bool DFS::empty() const {
   /** @todo [Part 1] */
-  return true;
+  if (inTraversal.empty())
+    return true;
+  else
+    return false;
 }
