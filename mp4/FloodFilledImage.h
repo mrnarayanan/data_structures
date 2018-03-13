@@ -8,6 +8,7 @@
 #include "cs225/PNG.h"
 #include <list>
 #include <iostream>
+#include <vector>
 
 #include "colorPicker/ColorPicker.h"
 #include "imageTraversal/ImageTraversal.h"
@@ -16,6 +17,7 @@
 #include "Animation.h"
 
 using namespace cs225;
+using namespace std;
 /**
  *This class is used to do flood fill on an image
  */
@@ -28,6 +30,9 @@ public:
 private:
 	/** @todo [Part 2] */
 	/** add private members here*/
+  PNG image;
+  vector<ImageTraversal*> traverse_v;
+  vector<ColorPicker*> picker_v;
 
 };
 

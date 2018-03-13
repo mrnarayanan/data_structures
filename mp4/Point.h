@@ -30,7 +30,7 @@ struct Point {
   /**
    * overload operator <
    * @param other The other point
-   * @return True for smaller, false for otherwise
+   * @return True for x or y smaller, false for otherwise
    */
   bool operator<(const Point &other) const {
     return (x < other.x || y < other.y);
@@ -39,7 +39,7 @@ struct Point {
   /**
    * overload operator ==
    * @param other The other point
-   * @return True for smaller, false for otherwise
+   * @return True for both x and y equal, false for otherwise
    */
   bool operator==(const Point &other) const {
     return (x == other.x && y == other.y);

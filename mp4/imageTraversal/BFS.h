@@ -30,8 +30,12 @@ public:
 
   void add(const Point & point);
   Point pop();
+  Point pop_novisit();
   Point peek() const;
   bool empty() const;
+  double get_tolerance();
+  PNG get_png();
+  Point get_start();
 
 private:
   /** @todo [Part 1] */
@@ -40,6 +44,10 @@ private:
   queue<Point> nextPoint;
   unsigned width;
   unsigned height;
+  double tol;
+  Point start_point;
+  PNG image;
+  vector< vector<int> > visited;
 };
 
 #endif

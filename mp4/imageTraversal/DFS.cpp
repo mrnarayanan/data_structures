@@ -21,6 +21,20 @@ DFS::DFS(const PNG & png, const Point & start, double tolerance) {
   /** @todo [Part 1] */
   width = png.width();
   height = png.height();
+  start_point = start;
+  tol = tolerance;
+  image = png;
+
+  // create visited double dimension vector
+  visited.resize(width);
+  for (unsigned i = 0; i < width; i++)
+    visited[i].resize(height);
+  for (unsigned i = 0; i < width; i++)
+  {
+    for (unsigned j = 0; j < height; j++)
+      visited[i][j] = 0;
+  }
+
 }
 
 /**
@@ -28,6 +42,7 @@ DFS::DFS(const PNG & png, const Point & start, double tolerance) {
  */
 ImageTraversal::Iterator DFS::begin() {
   /** @todo [Part 1] */
+  add(start_point);
   return ImageTraversal::Iterator();
 }
 
@@ -37,6 +52,7 @@ ImageTraversal::Iterator DFS::begin() {
 ImageTraversal::Iterator DFS::end() {
   /** @todo [Part 1] */
   return ImageTraversal::Iterator();
+  // return NULL;
 }
 
 /**
@@ -47,33 +63,33 @@ void DFS::add(const Point & point) {
   // right, below, left, above
   Point pr(point.x + 1, point.y);
   Point pb(point.x, point.y + 1);
-  Point pl(point.x - 1, point.y);
-  Point pa(point.x, point.y - 1);
+  Point pl( ((int) point.x) - 1, point.y);
+  Point pa(point.x, ((int) point.y) - 1);
 
-  // bounds checking
+  // bounds checking and checking if visited
   int count = 0;
-  if (point.x + 1 < width)
+  if (point.x + 1 < width && visited[point.x+1][point.y] == 0)
   {
     nextPoint.push(pr);
     count++;
   }
-  if (point.y + 1 < height)
+  if (point.y + 1 < height && visited[point.x][point.y+1] == 0)
   {
     nextPoint.push(pb);
     count++;
   }
-  if (point.x - 1 >= 0)
+  if ( ((int) point.x) - 1 >= 0 && visited[point.x-1][point.y] == 0)
   {
     nextPoint.push(pl);
     count++;
   }
-  if (point.y - 1 >= 0)
+  if ( ((int) point.y) - 1 >= 0 && visited[point.x][point.y-1] == 0)
   {
     nextPoint.push(pa);
     count++;
   }
 
-  for (int i = 0; i < count; i++) // execute 4 times
+  for (int i = 0; i < count; i++) // executes up to 4 times
   {
     inTraversal.push(nextPoint.top());
     nextPoint.pop();
@@ -86,9 +102,33 @@ void DFS::add(const Point & point) {
  */
 Point DFS::pop() {
   /** @todo [Part 1] */
-  Point ret = inTraversal.top();
-  inTraversal.pop();
-  return ret;
+  if (empty())
+  {
+    Point neg(999999,999999);
+    return neg;
+  }
+  else
+  {
+    Point ret = inTraversal.top();
+    inTraversal.pop();
+    visited[ret.x][ret.y] = 1;
+    return ret;
+  }
+}
+
+Point DFS::pop_novisit() {
+  /** @todo [Part 1] */
+  if (empty())
+  {
+    Point neg(999999,999999);
+    return neg;
+  }
+  else
+  {
+    Point ret = inTraversal.top();
+    inTraversal.pop();
+    return ret;
+  }
 }
 
 /**
@@ -96,8 +136,16 @@ Point DFS::pop() {
  */
 Point DFS::peek() const {
   /** @todo [Part 1] */
-  Point ret = inTraversal.top();
-  return ret;
+  if (empty())
+  {
+    Point neg(999999,999999);
+    return neg;
+  }
+  else
+  {
+    Point ret = inTraversal.top();
+    return ret;
+  }
 }
 
 /**
@@ -109,4 +157,19 @@ bool DFS::empty() const {
     return true;
   else
     return false;
+}
+
+double DFS::get_tolerance()
+{
+  return tol;
+}
+
+PNG DFS::get_png()
+{
+  return image;
+}
+
+Point DFS::get_start()
+{
+  return start_point;
 }

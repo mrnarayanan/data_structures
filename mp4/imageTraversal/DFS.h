@@ -9,6 +9,7 @@
 #include <cmath>
 #include <list>
 #include <stack>
+#include <vector>
 
 #include "../cs225/PNG.h"
 #include "../Point.h"
@@ -16,6 +17,7 @@
 #include "ImageTraversal.h"
 
 using namespace cs225;
+using namespace std;
 
 /**
  * A depth-first ImageTraversal.
@@ -30,8 +32,12 @@ public:
 
   void add(const Point & point);
   Point pop();
+  Point pop_novisit();
   Point peek() const;
   bool empty() const;
+  double get_tolerance();
+  PNG get_png();
+  Point get_start();
 
 private:
 	/** @todo [Part 1] */
@@ -40,6 +46,10 @@ private:
   stack<Point> nextPoint;
   unsigned width;
   unsigned height;
+  double tol;
+  Point start_point;
+  PNG image;
+  vector< vector<int> > visited;
 };
 
 #endif
