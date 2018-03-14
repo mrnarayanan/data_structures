@@ -64,20 +64,23 @@ Animation FloodFilledImage::animate(unsigned frameInterval) const {
     ImageTraversal * traversal = traverse_v[i];
     ColorPicker * colorPicker = picker_v[i];
 
-    while ( !(traversal->empty()) )
+    for (ImageTraversal::Iterator it = traversal->begin(); it != traversal->end();)
     {
-      Point curr = traversal->peek();
+      Point curr = *it;
       HSLAPixel & pix = image.getPixel(curr.x, curr.y);
       HSLAPixel change = colorPicker->getColor(curr.x, curr.y);
       pix = change;
-      traversal++;
+      // traversal++;
       if (count == frameInterval)
       {
         animation.addFrame(image);
         count = 0;
       }
       else
+      {
         count++;
+        ++it;
+      }
     }
 
   }
