@@ -70,18 +70,20 @@ ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
         return *this;
     HSLAPixel stt = img.getPixel(starting.x, starting.y);
     HSLAPixel nex = img.getPixel(next.x, next.y);
-    if ( it_->calculateDelta(stt, nex) > tol )
+    if ( it_->calculateDelta(stt, nex) >= tol )
     {
       it_->pop_novisit();
       std::cout << "Pop discard:  " << current.x << "," << current.y << '\n';
       next = it_->peek();
       goto label;
     }
+    /*
     else
     {
       current = it_->peek();
       std::cout << "Peeking new current:  " << current.x << "," << current.y << '\n';
     }
+    */
   }
   return *this;
 }

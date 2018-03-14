@@ -37,8 +37,6 @@ DFS::DFS(const PNG & png, const Point & start, double tolerance) {
       visited[i][j] = 0;
   }
 
-  std::cout << "Cry" << std::endl;
-
 }
 
 /**
@@ -79,33 +77,33 @@ void DFS::add(const Point & point) {
   Point pa(x, y - 1);
 
   // bounds checking and checking if visited
-  int count = 0;
+//  int count = 0;
   if (x + 1 < width && visited[x+1][y] == 0)
   {
-    nextPoint.push(pr);
-    count++;
+    inTraversal.push(pr);
+//    count++;
   }
   if (y + 1 < height && visited[x][y+1] == 0)
   {
-    nextPoint.push(pb);
-    count++;
+    inTraversal.push(pb);
+//    count++;
   }
   if (x - 1 >= 0 && visited[x-1][y] == 0)
   {
-    nextPoint.push(pl);
-    count++;
+    inTraversal.push(pl);
+//    count++;
   }
   if (y - 1 >= 0 && visited[x][y-1] == 0)
   {
-    nextPoint.push(pa);
-    count++;
+    inTraversal.push(pa);
+//    count++;
   }
 
-  for (int i = 0; i < count; i++) // executes up to 4 times
-  {
-    inTraversal.push(nextPoint.top());
-    nextPoint.pop();
-  }
+  // for (int i = 0; i < count; i++) // executes up to 4 times
+  // {
+  //   inTraversal.push(nextPoint.top());
+  //   nextPoint.pop();
+  // }
 
 }
 

@@ -43,7 +43,7 @@ private:
 	/** @todo [Part 1] */
 	/** add private members here*/
   stack<Point> inTraversal;
-  stack<Point> nextPoint;
+//  stack<Point> nextPoint;
   int width;
   int height;
   double tol;

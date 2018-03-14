@@ -41,7 +41,7 @@ private:
   /** @todo [Part 1] */
   /** add private members here*/
   queue<Point> inTraversal;
-  queue<Point> nextPoint;
+//  queue<Point> nextPoint;
   int width;
   int height;
   double tol;
