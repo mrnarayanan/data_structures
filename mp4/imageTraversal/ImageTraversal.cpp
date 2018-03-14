@@ -43,7 +43,6 @@ ImageTraversal::Iterator::Iterator(Point start, ImageTraversal * trav) {
   current = start;
   starting = start;
   it_->add(current);
-//  current = it_->peek();
 }
 
 /**
@@ -53,38 +52,55 @@ ImageTraversal::Iterator::Iterator(Point start, ImageTraversal * trav) {
  */
 ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
   /** @todo [Part 1] */
-  std::cout << "LINE 55  Is traversal empty?" << it_->empty() << '\n';
-  if ( !(it_->empty()) )
+  while ( !(it_->empty()) && it_->check_visit(it_->peek().x, it_->peek().y) )
   {
-    std::cout << "LINE 58" << '\n';
-    current = it_->pop();
-    std::cout << "Pop current:  " << current.x << "," << current.y << '\n';
-
-    it_->add(current);
-
-    Point next = it_->peek();
-    PNG img = it_->get_png();
-    double tol = it_->get_tolerance();
-    label:
-    if (next.x == 999999 || next.y == 999999) // empty
-        return *this;
-    HSLAPixel stt = img.getPixel(starting.x, starting.y);
-    HSLAPixel nex = img.getPixel(next.x, next.y);
-    if ( it_->calculateDelta(stt, nex) >= tol )
-    {
-      it_->pop_novisit();
-      std::cout << "Pop discard:  " << current.x << "," << current.y << '\n';
-      next = it_->peek();
-      goto label;
-    }
-    /*
-    else
-    {
-      current = it_->peek();
-      std::cout << "Peeking new current:  " << current.x << "," << current.y << '\n';
-    }
-    */
+    it_->pop();
   }
+
+  if (!it_->empty()) {
+
+    current = it_->pop();
+  // right, below, left, above
+  int x = current.x;
+  int y = current.y;
+  Point pr(x + 1, y);
+  Point pb(x, y + 1);
+  Point pl(x - 1, y);
+  Point pa(x, y - 1);
+
+  // bounds checking and checking if visited
+  double tol = it_->get_tolerance();
+  PNG image = it_->get_png();
+  int width = image.width();
+  int height = image.height();
+  HSLAPixel cur = image.getPixel(starting.x,starting.y);
+
+  if (x + 1 < width && tol >= calculateDelta(cur, image.getPixel(x+1,y)))
+  {
+    it_->add(pr);
+  }
+  if (y + 1 < height && tol >= calculateDelta(cur, image.getPixel(x,y+1)))
+  {
+    it_->add(pb);
+  }
+  if (x - 1 >= 0 && tol >= calculateDelta(cur, image.getPixel(x-1,y)))
+  {
+    it_->add(pl);
+  }
+  if (y - 1 >= 0 && tol >= calculateDelta(cur, image.getPixel(x,y-1)))
+  {
+    it_->add(pa);
+  }
+
+}
+
+  while ( !(it_->empty()) && it_->check_visit(it_->peek().x, it_->peek().y) )
+  {
+    it_->pop();
+  }
+
+  if (!it_->empty())
+    current = it_->peek();
   return *this;
 }
 

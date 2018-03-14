@@ -36,12 +36,12 @@ public:
   double get_tolerance();
   PNG get_png();
   Point get_start();
+  bool check_visit(int x, int y);
 
 private:
   /** @todo [Part 1] */
   /** add private members here*/
   queue<Point> inTraversal;
-//  queue<Point> nextPoint;
   int width;
   int height;
   double tol;

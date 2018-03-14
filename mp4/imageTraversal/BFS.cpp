@@ -63,6 +63,10 @@ ImageTraversal::Iterator BFS::end() {
  */
 void BFS::add(const Point & point) {
   /** @todo [Part 1] */
+  if (visited[point.x][point.y] == 0) // point not visited
+    inTraversal.push(point);
+
+  /*
   if (point == start_point)
   {
     inTraversal.push(point);
@@ -105,6 +109,7 @@ void BFS::add(const Point & point) {
   //   inTraversal.push(nextPoint.front());
   //   nextPoint.pop();
   // }
+  */
 }
 
 /**
@@ -182,4 +187,12 @@ PNG BFS::get_png()
 Point BFS::get_start()
 {
   return start_point;
+}
+
+bool BFS::check_visit(int x, int y)
+{
+  if (visited[x][y] == 1)
+    return true;
+  else
+    return false;
 }

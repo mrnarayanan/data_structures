@@ -91,6 +91,7 @@ public:
   virtual double get_tolerance() = 0;
   virtual PNG get_png() = 0;
   virtual Point get_start() = 0;
+  virtual bool check_visit(int x, int y) = 0;
 
 private:
   static double calculateDelta(const HSLAPixel & p1, const HSLAPixel & p2);

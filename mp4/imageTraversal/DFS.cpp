@@ -60,8 +60,13 @@ ImageTraversal::Iterator DFS::end() {
 /**
  * Adds a Point for the traversal to visit at some point in the future.
  */
-void DFS::add(const Point & point) {
+void DFS::add(const Point & point)
+{
   /** @todo [Part 1] */
+  if (visited[point.x][point.y] == 0) // point not visited
+    inTraversal.push(point);
+
+  /*
   if (point == start_point)
   {
     inTraversal.push(point);
@@ -104,7 +109,7 @@ void DFS::add(const Point & point) {
   //   inTraversal.push(nextPoint.top());
   //   nextPoint.pop();
   // }
-
+*/
 }
 
 /**
@@ -182,4 +187,12 @@ PNG DFS::get_png()
 Point DFS::get_start()
 {
   return start_point;
+}
+
+bool DFS::check_visit(int x, int y)
+{
+  if (visited[x][y] == 1)
+    return true;
+  else
+    return false;
 }
