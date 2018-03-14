@@ -72,16 +72,18 @@ Animation FloodFilledImage::animate(unsigned frameInterval) const {
       HSLAPixel change = colorPicker->getColor(curr.x, curr.y);
       pix = change;
       // traversal++;
+      count++;
+      ++it;
       if (count == frameInterval)
       {
         animation.addFrame(image);
         count = 0;
       }
-      else
-      {
-        count++;
-        ++it;
-      }
+      // else
+      // {
+      //   count++;
+      //   ++it;
+      // }
     }
 
   }
