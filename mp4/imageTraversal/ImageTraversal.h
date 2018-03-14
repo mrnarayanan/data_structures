@@ -44,6 +44,7 @@ public:
     /** add private members here if neccesary*/
     ImageTraversal * it_;
     Point current;
+    Point starting;
 
   };
 

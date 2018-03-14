@@ -41,6 +41,7 @@ ImageTraversal::Iterator::Iterator(Point start, ImageTraversal * trav) {
   /** @todo [Part 1] */
   it_ = trav;
   current = start;
+  starting = start;
   it_->add(current);
 //  current = it_->peek();
 }
@@ -52,30 +53,34 @@ ImageTraversal::Iterator::Iterator(Point start, ImageTraversal * trav) {
  */
 ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
   /** @todo [Part 1] */
-  std::cout << "LINE 55  " << it_->empty() << '\n';
+  std::cout << "LINE 55  Is traversal empty?" << it_->empty() << '\n';
   if ( !(it_->empty()) )
   {
     std::cout << "LINE 58" << '\n';
     current = it_->pop();
-    std::cout << current.x << "  " << current.y << '\n';
+    std::cout << "Pop current:  " << current.x << "," << current.y << '\n';
+
     it_->add(current);
+
     Point next = it_->peek();
     PNG img = it_->get_png();
     double tol = it_->get_tolerance();
     label:
     if (next.x == 999999 || next.y == 999999) // empty
         return *this;
-    HSLAPixel cur = img.getPixel(current.x, current.y);
+    HSLAPixel stt = img.getPixel(starting.x, starting.y);
     HSLAPixel nex = img.getPixel(next.x, next.y);
-    if ( it_->calculateDelta(cur, nex) > tol )
+    if ( it_->calculateDelta(stt, nex) > tol )
     {
       it_->pop_novisit();
+      std::cout << "Pop discard:  " << current.x << "," << current.y << '\n';
       next = it_->peek();
       goto label;
     }
     else
     {
       current = it_->peek();
+      std::cout << "Peeking new current:  " << current.x << "," << current.y << '\n';
     }
   }
   return *this;

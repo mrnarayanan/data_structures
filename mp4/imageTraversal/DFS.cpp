@@ -2,6 +2,7 @@
 #include <cmath>
 #include <list>
 #include <stack>
+#include <iostream>
 
 #include "../cs225/PNG.h"
 #include "../Point.h"
@@ -24,6 +25,7 @@ DFS::DFS(const PNG & png, const Point & start, double tolerance) {
   start_point = start;
   tol = tolerance;
   image = png;
+  //inTraversal.push(start_point);
 
   // create visited double dimension vector
   visited.resize(width);
@@ -34,6 +36,8 @@ DFS::DFS(const PNG & png, const Point & start, double tolerance) {
     for (int j = 0; j < height; j++)
       visited[i][j] = 0;
   }
+
+  std::cout << "Cry" << std::endl;
 
 }
 
