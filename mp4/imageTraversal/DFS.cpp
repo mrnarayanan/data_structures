@@ -64,7 +64,7 @@ void DFS::add(const Point & point) {
   {
     inTraversal.push(point);
     pop();
-    return;
+  //  return;
   }
   // right, below, left, above
   int x = point.x;
