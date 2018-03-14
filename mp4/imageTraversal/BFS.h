@@ -42,8 +42,8 @@ private:
   /** add private members here*/
   queue<Point> inTraversal;
   queue<Point> nextPoint;
-  unsigned width;
-  unsigned height;
+  int width;
+  int height;
   double tol;
   Point start_point;
   PNG image;

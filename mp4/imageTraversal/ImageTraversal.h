@@ -30,6 +30,7 @@ public:
   class Iterator : std::iterator<std::forward_iterator_tag, Point> {
   public:
     Iterator();
+    Iterator(Point, ImageTraversal*);
 
     Iterator & operator++();
     Point operator*();

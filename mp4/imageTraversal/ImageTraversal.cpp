@@ -37,6 +37,14 @@ ImageTraversal::Iterator::Iterator() {
   it_ = NULL;
 }
 
+ImageTraversal::Iterator::Iterator(Point start, ImageTraversal * trav) {
+  /** @todo [Part 1] */
+  it_ = trav;
+  current = start;
+  it_->add(current);
+//  current = it_->peek();
+}
+
 /**
  * Iterator increment opreator.
  *
@@ -44,9 +52,12 @@ ImageTraversal::Iterator::Iterator() {
  */
 ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
   /** @todo [Part 1] */
+  std::cout << "LINE 55  " << it_->empty() << '\n';
   if ( !(it_->empty()) )
   {
+    std::cout << "LINE 58" << '\n';
     current = it_->pop();
+    std::cout << current.x << "  " << current.y << '\n';
     it_->add(current);
     Point next = it_->peek();
     PNG img = it_->get_png();

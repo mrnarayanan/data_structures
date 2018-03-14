@@ -44,8 +44,8 @@ private:
 	/** add private members here*/
   stack<Point> inTraversal;
   stack<Point> nextPoint;
-  unsigned width;
-  unsigned height;
+  int width;
+  int height;
   double tol;
   Point start_point;
   PNG image;

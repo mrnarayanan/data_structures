@@ -29,11 +29,11 @@ BFS::BFS(const PNG & png, const Point & start, double tolerance) {
 
   // create visited double dimension vector
   visited.resize(width);
-  for (unsigned i = 0; i < width; i++)
+  for (int i = 0; i < width; i++)
     visited[i].resize(height);
-  for (unsigned i = 0; i < width; i++)
+  for (int i = 0; i < width; i++)
   {
-    for (unsigned j = 0; j < height; j++)
+    for (int j = 0; j < height; j++)
       visited[i][j] = 0;
   }
 
@@ -45,8 +45,8 @@ BFS::BFS(const PNG & png, const Point & start, double tolerance) {
  */
 ImageTraversal::Iterator BFS::begin() {
   /** @todo [Part 1] */
-  add(start_point);
-  return ImageTraversal::Iterator();
+  BFS * trav = new BFS(image, start_point, tol);
+  return ImageTraversal::Iterator(start_point, trav);
 }
 
 /**
@@ -63,30 +63,38 @@ ImageTraversal::Iterator BFS::end() {
  */
 void BFS::add(const Point & point) {
   /** @todo [Part 1] */
+  if (point == start_point)
+  {
+    inTraversal.push(point);
+    pop();
+    return;
+  }
   // right, below, left, above
-  Point pr(point.x + 1, point.y);
-  Point pb(point.x, point.y + 1);
-  Point pl( ((int) point.x) - 1, point.y);
-  Point pa(point.x, ((int) point.y) - 1);
+  int x = point.x;
+  int y = point.y;
+  Point pr(x + 1, y);
+  Point pb(x, y + 1);
+  Point pl(x - 1, y);
+  Point pa(x, y - 1);
 
   // bounds checking and checking if visited
   int count = 0;
-  if (point.x + 1 < width && visited[point.x+1][point.y] == 0)
+  if (x + 1 < width && visited[x+1][y] == 0)
   {
     nextPoint.push(pr);
     count++;
   }
-  if (point.y + 1 < height && visited[point.x][point.y+1] == 0)
+  if (y + 1 < height && visited[x][y+1] == 0)
   {
     nextPoint.push(pb);
     count++;
   }
-  if ( ((int) point.x) - 1 >= 0 && visited[point.x-1][point.y] == 0)
+  if (x - 1 >= 0 && visited[x-1][y] == 0)
   {
     nextPoint.push(pl);
     count++;
   }
-  if ( ((int) point.y) - 1 >= 0 && visited[point.x][point.y-1] == 0)
+  if (y - 1 >= 0 && visited[x][y-1] == 0)
   {
     nextPoint.push(pa);
     count++;
@@ -106,7 +114,7 @@ Point BFS::pop() {
   /** @todo [Part 1] */
   if (empty())
   {
-    Point neg(-1,-1);
+    Point neg(999999,999999);
     return neg;
   }
   else
@@ -122,7 +130,7 @@ Point BFS::pop_novisit() {
   /** @todo [Part 1] */
   if (empty())
   {
-    Point neg(-1,-1);
+    Point neg(999999,999999);
     return neg;
   }
   else
