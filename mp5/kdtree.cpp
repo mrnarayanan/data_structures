@@ -15,8 +15,12 @@ bool KDTree<Dim>::smallerDimVal(const Point<Dim>& first,
     /**
      * @todo Implement this function!
      */
-
-    return false;
+    if (curDim >= Dim || curDim < 0)
+      return false;
+    if (first[curDim] == second[curDim])
+      return (first < second);
+    else
+      return (first[curDim] < second[curDim]);
 }
 
 template <int Dim>
@@ -27,8 +31,17 @@ bool KDTree<Dim>::shouldReplace(const Point<Dim>& target,
     /**
      * @todo Implement this function!
      */
+     int dist1 = 0, dist2 = 0;
+     for (int i = 0; i < Dim; i++)
+     {
+       dist1 += pow( (potential[i] - target[i]), 2 );
+       dist2 += pow( (currentBest[i] - target[i]), 2 );
+      }
 
-     return false;
+      if (dist1 == dist2)
+        return (potential < currentBest);
+      else
+        return (dist1 < dist2);
 }
 
 template <int Dim>
@@ -71,4 +84,3 @@ Point<Dim> KDTree<Dim>::findNearestNeighbor(const Point<Dim>& query) const
 
     return Point<Dim>();
 }
-
