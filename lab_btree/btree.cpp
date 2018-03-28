@@ -47,6 +47,7 @@ V BTree<K, V>::find(const BTreeNode* subroot, const K& key) const
      if (subroot == NULL)
        return V();
     unsigned first_larger_idx = insertion_idx(subroot->elements, key);
+
     if ( (first_larger_idx == subroot->elements.size() && subroot->is_leaf)
           || ( !(subroot->elements[first_larger_idx].key == key) && subroot->is_leaf) )
           return V(); // key not found and leaf
@@ -185,24 +186,31 @@ void BTree<K, V>::insert(BTreeNode* subroot, const DataPair& pair)
      * After this call returns we need to check if the child became too large
      * and thus needs to be split to maintain order.
      */
-
+  
     size_t first_larger_idx = insertion_idx(subroot->elements, pair);
 
     /* TODO Your code goes here! */
 
     // finding where to insert
-    if (subroot->is_leaf && !(subroot->elements[first_larger_idx] == pair)) // is leaf and not found
+    if ( subroot->is_leaf && !(subroot->elements[first_larger_idx] == pair) ) // is leaf and not found
     {
       auto elem_itr = subroot->elements.begin() + first_larger_idx;
       subroot->elements.insert(elem_itr, pair);
     }
-    else if (!(subroot->is_leaf) && !(subroot->elements[first_larger_idx] == pair)) // not leaf and not found
+    else if ( !(subroot->is_leaf) && !(subroot->elements[first_larger_idx] == pair) ) // not leaf and not found
     {
       BTreeNode * child = subroot->children[first_larger_idx];
       insert(child, pair);
     }
 
     // check if child is too large and need to split_child()
-    
+    if ( !(subroot->is_leaf) )
+    {
+      BTreeNode * ch = subroot->children[first_larger_idx];
+      if (ch->elements.size() >= order)
+      {
+        split_child(subroot, first_larger_idx);
+      }
+    }
 
 }
