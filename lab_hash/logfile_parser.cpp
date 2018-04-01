@@ -35,8 +35,8 @@ LogfileParser::LogLine::LogLine(const string& line)
         dte += dline;
         dte += " ";
     } while (iss);
-		
-    dte = dte.substr(0, dte.length() - 6); 
+
+    dte = dte.substr(0, dte.length() - 6);
     std::tm tm = {};
     std::stringstream ss(dte);
     ss >> std::get_time(&tm, "%a %b %d %H:%M:%S %Y");
@@ -73,6 +73,21 @@ LogfileParser::LogfileParser(const string& fname) : whenVisitedTable(256)
          * this problem. This should also build the uniqueURLs member
          * vector as well.
          */
+
+         string index = ll.customer;
+         index.append(ll.url);
+         if (pageVisitedTable.find(ll.url) == bool())
+         {
+           pageVisitedTable.insert(ll.url, true);
+           uniqueURLs.push_back(ll.url);
+         }
+         if (whenVisitedTable.find(index) == time_t())
+            whenVisitedTable.insert(index, ll.date);
+         else if (whenVisitedTable.find(index) < ll.date)
+         {
+           whenVisitedTable.remove(index);
+           whenVisitedTable.insert(index, ll.date);
+         }
     }
     infile.close();
 }
@@ -90,11 +105,12 @@ bool LogfileParser::hasVisited(const string& customer, const string& url) const
     /**
      * @todo Implement this function.
      */
-
-    (void) customer; // prevent warnings... When you implement this function, remove this line.
-    (void) url;      // prevent warnings... When you implement this function, remove this line.
-
-    return true; // replaceme
+     string index = customer;
+     index.append(url);
+     if (whenVisitedTable.find(index) == time_t())
+        return false;
+     else
+        return true;
 }
 
 /**
@@ -115,10 +131,9 @@ time_t LogfileParser::dateVisited(const string& customer,
      * @todo Implement this function.
      */
 
-    (void) customer; // prevent warnings... When you implement this function, remove this line.
-    (void) url;      // prevent warnings... When you implement this function, remove this line.
-
-    return time_t(); // replaceme
+   string index = customer;
+   index.append(url);
+   return whenVisitedTable.find(index);
 }
 
 /**
