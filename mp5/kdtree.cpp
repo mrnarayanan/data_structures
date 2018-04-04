@@ -200,11 +200,19 @@ void KDTree<Dim>::nearest(KDTreeNode * node, const Point<Dim> query, int d, KDTr
   {
     currentBest->point = node->point;
   }
+
   radius = get_distance(query, currentBest->point);
-  int split_dist = pow( (query[axis] - currentBest->point[axis]) , 2);
+  int split_dist = pow( (query[axis] - node->point[axis]) , 2);
 
   if (split_dist <= radius)
   {
+    // if (split_dist == radius)
+    // {
+    //   if (node->point < currentBest->point)
+    //   {
+    //     currentBest->point = node->point;
+    //   }
+    // }
     KDTreeNode temp(currentBest->point);
     if (smallerDimVal(query, currentBest->point, axis))
     {
