@@ -9,6 +9,10 @@
 
 using namespace std;
 
+/*
+ * This function returns true if the first point has a smaller value in the
+ * specified dimension than the second point. Ties are broken by Point::operator<
+*/
 template <int Dim>
 bool KDTree<Dim>::smallerDimVal(const Point<Dim>& first,
                                 const Point<Dim>& second, int curDim) const
@@ -24,6 +28,10 @@ bool KDTree<Dim>::smallerDimVal(const Point<Dim>& first,
       return (first[curDim] < second[curDim]);
 }
 
+/*
+ * This function returns true if the potential point is closer to the target than the
+ * second point (by squared distance). Ties are broken by Point::operator<
+*/
 template <int Dim>
 bool KDTree<Dim>::shouldReplace(const Point<Dim>& target,
                                 const Point<Dim>& currentBest,
@@ -41,6 +49,9 @@ bool KDTree<Dim>::shouldReplace(const Point<Dim>& target,
       return (dist1 < dist2);
 }
 
+/*
+ * KDTree constructor given vector of newPoints
+*/
 template <int Dim>
 KDTree<Dim>::KDTree(const vector<Point<Dim>>& newPoints)
 {
@@ -60,6 +71,9 @@ KDTree<Dim>::KDTree(const vector<Point<Dim>>& newPoints)
      }
 }
 
+/*
+ * KDTree copy constructor
+ */
 template <int Dim>
 KDTree<Dim>::KDTree(const KDTree& other) {
   /**
@@ -78,15 +92,23 @@ KDTree<Dim>::KDTree(const KDTree& other) {
    }
 }
 
+/*
+ * KDTree assignment operator
+ */
 template <int Dim>
 const KDTree<Dim>& KDTree<Dim>::operator=(const KDTree& rhs) {
   /**
    * @todo Implement this function!
    */
-
+  this->list = rhs.list;
+  root = kdtree(0, list.size() - 1, 0);
+  size = list.size();
   return *this;
 }
 
+/*
+ * KDTree Destructor
+ */
 template <int Dim>
 KDTree<Dim>::~KDTree() {
   /**
@@ -97,6 +119,9 @@ KDTree<Dim>::~KDTree() {
   // delete[] list;
 }
 
+/*
+ * Returns the nearest neighbor of the specified point. This is the public function.
+ */
 template <int Dim>
 Point<Dim> KDTree<Dim>::findNearestNeighbor(const Point<Dim>& query) const
 {
@@ -110,6 +135,10 @@ Point<Dim> KDTree<Dim>::findNearestNeighbor(const Point<Dim>& query) const
     return currentBest.point;
 }
 
+/*
+ * Helper function for quickselect which performs a partition
+ * about the element at index pivotIndex
+ */
 template <int Dim>
 int KDTree<Dim>::partition(int left, int right, int pivotIndex, int d)
 {
@@ -137,6 +166,10 @@ int KDTree<Dim>::partition(int left, int right, int pivotIndex, int d)
     return storeIndex;
 }
 
+/*
+ * Finds the kth smallest element in the unsorted list, within indices left and right.
+ * Implements partition()
+ */
 template <int Dim>
 Point<Dim> KDTree<Dim>::quickselect(int left, int right, int k, int d)
 {
@@ -153,6 +186,10 @@ Point<Dim> KDTree<Dim>::quickselect(int left, int right, int k, int d)
     return quickselect(pivotIndex + 1, right, k, d);
 }
 
+/*
+ * Helper function for KDTree constructor which recursively builds the kdtree
+ * Implements quickselect()
+ */
 template <int Dim>
 typename KDTree<Dim>::KDTreeNode * KDTree<Dim>::kdtree(int left, int right, int d) // d is depth, current dimension - pass in axis
 {
@@ -167,6 +204,11 @@ typename KDTree<Dim>::KDTreeNode * KDTree<Dim>::kdtree(int left, int right, int 
   return top;
 }
 
+/*
+ * Helper function for findNearestNeighbor()
+ * Takes in a node to start searching from, the point we're finding nearest neighbor of,
+ * current dimension, and a node that contains a point that represents the currentBest point
+ */
 template <int Dim>
 void KDTree<Dim>::nearest(KDTreeNode * node, const Point<Dim> query, int d, KDTreeNode * currentBest) const
 {
@@ -242,12 +284,9 @@ void KDTree<Dim>::nearest(KDTreeNode * node, const Point<Dim> query, int d, KDTr
   return;
 }
 
-template <int Dim>
-void KDTree<Dim>::copy()
-{
-
-}
-
+/*
+ * Helper function called by Destructor. Deletes all child nodes recursively from given node
+ */
 template <int Dim>
 void KDTree<Dim>::clear(KDTreeNode * node)
 {
@@ -261,6 +300,9 @@ void KDTree<Dim>::clear(KDTreeNode * node)
   node = NULL;
 }
 
+/*
+ * Helper function that returns the squared distance between two points
+ */
 template <int Dim>
 int KDTree<Dim>::get_distance(const Point<Dim>& point1, const Point<Dim>& point2) const
 {

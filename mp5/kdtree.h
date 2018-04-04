@@ -266,7 +266,6 @@ class KDTree
      Point<Dim> quickselect(int left, int right, int k, int d);
      KDTreeNode * kdtree(int left, int right, int d);
      int get_distance(const Point<Dim>& point1, const Point<Dim>& point2) const;
-     void copy();
      void clear(KDTreeNode * node);
      void nearest(KDTreeNode * node, const Point<Dim> query, int d, KDTreeNode * currentBest) const;
 };
