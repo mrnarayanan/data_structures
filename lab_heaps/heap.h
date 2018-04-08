@@ -90,7 +90,7 @@ class heap
      * root at either index 0 or index 1).** You should **pick one**, and
      * write the helper functions according to that choice.
      */
-    std::vector<T> _elems;
+    std::vector<T> _elems; // 1-indexed
 
     /**
      * Comparison functor. This functor takes two parameters and returns true
