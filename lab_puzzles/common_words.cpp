@@ -43,17 +43,49 @@ void CommonWords::init_file_word_maps(const vector<string>& filenames)
     file_word_maps.resize(filenames.size());
 
     // go through all files
-    for (size_t i = 0; i < filenames.size(); i++) {
+    for (size_t i = 0; i < filenames.size(); i++)
+    {
         // get the corresponding vector of words that represents the current
         // file
         vector<string> words = file_to_vector(filenames[i]);
         /* Your code goes here! */
+        map<string, unsigned int> wif;
+        for (unsigned j = 0; j < words.size(); j++)
+        {
+          auto lookup = wif.find(words[j]);
+          if (lookup != wif.end())
+          {
+              wif[words[j]]++;
+          }
+          else
+          {
+              wif[words[j]] = 1;
+          }
+        }
+        file_word_maps[i] = wif;
     }
 }
 
 void CommonWords::init_common()
 {
     /* Your code goes here! */
+    for (unsigned i = 0; i < file_word_maps.size(); i++)
+    {
+      auto m = file_word_maps[i];
+      for (auto & key_val : m)
+      {
+        string word = key_val.first;
+        auto lookup = common.find(word);
+        if (lookup != common.end())
+        {
+            common[word]++;
+        }
+        else
+        {
+            common[word] = 1;
+        }
+      }
+    }
 }
 
 /**
@@ -64,7 +96,29 @@ void CommonWords::init_common()
 vector<string> CommonWords::get_common_words(unsigned int n) const
 {
     vector<string> out;
+    map<string, unsigned int> count;
     /* Your code goes here! */
+    for (auto & pair : common)
+    {
+      if (pair.second == file_word_maps.size())
+      {
+        string word = pair.first;
+        count[word] = 0;
+        for (unsigned i = 0; i < file_word_maps.size(); i++)
+        {
+          auto m = file_word_maps[i];
+          if (m[word] >= n)
+          {
+            count[word]++;
+          }
+        }
+      }
+    }
+    for (auto & key_val : count)
+    {
+      if (key_val.second == file_word_maps.size())
+        out.push_back(key_val.first);
+    }
     return out;
 }
 

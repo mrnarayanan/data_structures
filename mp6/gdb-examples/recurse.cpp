@@ -17,7 +17,7 @@ void recurse(int index, int length) {
 		std::cout<<'*';
 	std::cout<<std::endl;
 
-	recurse(index+1, length);
+	recurse(index-1, length);
 }
 
 
@@ -32,7 +32,7 @@ if (argc<2)
 
 int input = std::atoi(argv[1]);
 
-recurse(1,input);
+recurse(input,input);
 
 
 }
