@@ -57,6 +57,8 @@ class AnagramDict
 
   private:
     std::map<std::string, std::vector<std::string>> dict;
+
+    int hash(std::string);
 };
 
 #endif /* ANAGRAM_DICT_H */

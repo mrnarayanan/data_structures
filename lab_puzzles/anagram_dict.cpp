@@ -23,6 +23,33 @@ using std::ifstream;
 AnagramDict::AnagramDict(const string& filename)
 {
     /* Your code goes here! */
+    vector<string> words;
+    ifstream wordsFile(filename);
+    string wd;
+    if (wordsFile.is_open())
+    {
+        /* Reads a line from `wordsFile` into `word` until the file ends. */
+        while (getline(wordsFile, wd))
+        {
+          words.push_back(wd);
+        }
+    }
+
+    for (unsigned i = 0; i < words.size(); i++)
+    {
+      string ww = words[i];
+      auto lookup = dict.find(ww);
+      if (lookup == dict.end()) // new word
+      {
+        dict[ww].push_back(ww);
+        dict[ww].pop_back();
+        for (auto & key_val : dict)
+        {
+          if (hash(ww) == hash(key_val.first))
+            key_val.second.push_back(ww);
+        }
+      }
+    }
 }
 
 /**
@@ -32,6 +59,21 @@ AnagramDict::AnagramDict(const string& filename)
 AnagramDict::AnagramDict(const vector<string>& words)
 {
     /* Your code goes here! */
+    for (unsigned i = 0; i < words.size(); i++)
+    {
+      string ww = words[i];
+      auto lookup = dict.find(ww);
+      if (lookup == dict.end()) // new word
+      {
+        dict[ww].push_back(ww);
+        dict[ww].pop_back();
+        for (auto & key_val : dict)
+        {
+          if (hash(ww) == hash(key_val.first))
+            key_val.second.push_back(ww);
+        }
+      }
+    }
 }
 
 /**
@@ -43,7 +85,18 @@ AnagramDict::AnagramDict(const vector<string>& words)
 vector<string> AnagramDict::get_anagrams(const string& word) const
 {
     /* Your code goes here! */
-    return vector<string>();
+    vector<string> ret;
+    auto lookup = dict.find(word);
+    if (lookup == dict.end()) //  word not found
+    {
+      return ret;
+    }
+    else
+    {
+      ret = lookup->second;
+    } 
+
+    return ret;
 }
 
 /**
@@ -56,4 +109,13 @@ vector<vector<string>> AnagramDict::get_all_anagrams() const
 {
     /* Your code goes here! */
     return vector<vector<string>>();
+}
+
+int AnagramDict::hash(string word)
+{
+  int sum = 0;
+  for (unsigned i = 0; i < word.size(); i++)
+    sum += word[i];
+  sum *= word.size();
+  return sum;
 }
