@@ -187,6 +187,7 @@ SkipNode * SkipList::findRHelper(int key, int level, SkipNode * curr) {
     // Base Case:
     if (nextKey == key) {
         ret = curr->nodePointers[level].next;
+        return ret;
     }
 
     // Recusive Case:
