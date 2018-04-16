@@ -139,6 +139,8 @@ int main(int argc, char *argv[])
     test->printKeys();
     test->remove(4);
     test->printKeys();
+    test->insert(19, temp);
+    test->insert(-1, temp);
     test->insert(4, temp);
     test->printKeys();
 

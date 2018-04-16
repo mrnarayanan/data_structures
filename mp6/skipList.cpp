@@ -73,12 +73,15 @@ void SkipList::insert(int key, HSLAPixel value) {
     while (traverse->nodePointers[0].next != tail_ && (level >= 0)) {
         int nextKey = traverse->nodePointers[level].next->key;
 
-        if (key < nextKey) {
+        if (key < nextKey)
+        {
             level--;
             if (level < 0 ) { break; }
-        } else  {
+        }
+        else
+        {
             traverse = traverse->nodePointers[level].next;
-            level = traverse->nodePointers.size() - 1;
+          //  level = traverse->nodePointers.size() - 1;
         }
     }
 
@@ -104,7 +107,7 @@ void SkipList::insert(int key, HSLAPixel value) {
             forward->nodePointers[forwardLevel].prev = newNode;
             newNode->nodePointers[forwardLevel].next = forward;
             forwardLevel++;
-        } if (forward->nodePointers.size() > (size_t)forwardLevel) {
+        } else if (forward->nodePointers.size() > (size_t)forwardLevel) {
             forward->nodePointers[forwardLevel].prev = newNode;
             newNode->nodePointers[forwardLevel].next = forward;
             forwardLevel++;
@@ -118,7 +121,7 @@ void SkipList::insert(int key, HSLAPixel value) {
             prev->nodePointers[backwardLevel].next = newNode;
             newNode->nodePointers[backwardLevel].prev = prev;
             backwardLevel++;
-        } if (prev->nodePointers.size() > (size_t)backwardLevel) {
+        } else if (prev->nodePointers.size() > (size_t)backwardLevel) {
             prev->nodePointers[backwardLevel].next = newNode;
             newNode->nodePointers[backwardLevel].prev = prev;
             backwardLevel++;
