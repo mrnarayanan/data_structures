@@ -7,6 +7,9 @@
 
 #include "graph_tools.h"
 
+// static variable
+static unordered_map<Vertex, Vertex> parent_map;
+
 /**
  * Finds the minimum edge weight in the Graph graph.
  * THIS FUNCTION IS GRADED.
@@ -26,7 +29,9 @@
 int GraphTools::findMinWeight(Graph& graph)
 {
     //TODO: YOUR CODE HERE
-    return -1;
+    Vertex start = graph.getStartingVertex();
+    Edge minedge = BFS(graph, start);
+    return minedge.getWeight();
 }
 
 /**
@@ -53,8 +58,23 @@ int GraphTools::findMinWeight(Graph& graph)
 int GraphTools::findShortestPath(Graph& graph, Vertex start, Vertex end)
 {
     //TODO: YOUR CODE HERE
+    // mask warnings
+    graph.getEdge(start, end);
 
-    return -1;
+    int count = 0;
+    Vertex st = graph.getStartingVertex();
+//     BFS(graph, st);
+//
+//     while (true)
+//     {
+//       Vertex parent = parent_map[end];
+// //      graph.setEdgeLabel(parent, end, "MINPATH");
+//       count++;
+//       end = parent;
+//       if (start == parent)
+//         break;
+//     }
+    return count;
 }
 
 /**
@@ -73,5 +93,76 @@ int GraphTools::findShortestPath(Graph& graph, Vertex start, Vertex end)
 void GraphTools::findMST(Graph& graph)
 {
     //TODO: YOUR CODE HERE
+    // mask warning
+    graph.getStartingVertex();
+    DisjointSets forest;
+    vector<Vertex> vert = graph.getVertices();
+    // for (unsigned i = 0; i < vert.size(); i++)
+    // {
+    //   forest.
+    // }
 }
 
+Edge GraphTools::BFS(Graph& graph, Vertex start)
+{
+  // clear everything first
+  vector<Vertex> vert = graph.getVertices();
+  vector<Edge> ed = graph.getEdges();
+  for (unsigned i = 0; i < vert.size(); i++)
+  {
+    graph.setVertexLabel(vert[i], "UNEXPLORED");
+  }
+  for (unsigned i = 0; i < ed.size(); i++)
+  {
+    Vertex src = ed[i].source;
+    Vertex dest = ed[i].dest;
+    graph.setEdgeLabel(src, dest, "UNEXPLORED");
+  }
+
+  // start traversal
+  queue<Vertex> q;
+  graph.setVertexLabel(start, "VISITED");
+  q.push(start);
+  int min = INT_MAX;
+  Vertex min_start;
+  Vertex min_end;
+  bool wt = true;
+  //graph.weighted;
+
+  while (!q.empty())
+  {
+    Vertex v = q.front();
+    q.pop();
+    vector<Vertex> adj = graph.getAdjacent(v);
+    for (unsigned i = 0; i < adj.size(); i++)
+    {
+      Vertex w = adj[i];
+      if (graph.getVertexLabel(w) == "UNEXPLORED")
+      {
+        graph.setEdgeLabel(v,w,"DISCOVERY");
+        graph.setVertexLabel(w, "VISITED");
+        q.push(w);
+        parent_map[w] = v;
+      }
+      else if (graph.getEdgeLabel(v,w) == "UNEXPLORED")
+        graph.setEdgeLabel(v,w,"CROSS");
+      if (wt)
+      {
+        int weight = graph.getEdgeWeight(v, w);
+        if (weight < min)
+        {
+          min_start = v;
+          min_end = w;
+          min = weight;
+        }
+      }
+    }
+  }
+  if (wt)
+  {
+    graph.setEdgeLabel(min_start, min_end, "MIN");
+    return graph.getEdge(min_start, min_end);
+  }
+  else
+    return Edge();
+}
