@@ -64,10 +64,6 @@ int GraphTools::findShortestPath(Graph& graph, Vertex start, Vertex end)
     int count = 0;
     parent_map.clear();
     BFS(graph, start, false);
-    for (auto & x : parent_map)
-       std::cout << x.first << ": " << x.second << std::endl;
-
-//    return 0;
 
     while (true)
     {
@@ -97,14 +93,41 @@ int GraphTools::findShortestPath(Graph& graph, Vertex start, Vertex end)
 void GraphTools::findMST(Graph& graph)
 {
     //TODO: YOUR CODE HERE
-    // mask warning
-    graph.getStartingVertex();
+    Vertex start = graph.getStartingVertex();
+    BFS(graph, start, true);
+
     DisjointSets forest;
     vector<Vertex> vert = graph.getVertices();
-    // for (unsigned i = 0; i < vert.size(); i++)
-    // {
-    //   forest.
-    // }
+    unordered_map<Vertex, unsigned> krusk;
+    for (unsigned i = 0; i < vert.size(); i++)
+    {
+      krusk.emplace(vert[i], i);
+    }
+    forest.addelements(vert.size());
+    vector<Edge> ed = graph.getEdges();
+    std::sort(ed.begin(), ed.end());
+    unsigned num = 0;
+    int ctor = 0;
+    while (num < vert.size() - 1)
+    {
+      Edge mine = ed[ctor++];
+      Vertex u = mine.source;
+      Vertex v = mine.dest;
+    //  std::cout << u << " --> " << v << std::endl;
+      // if (u == "")
+      //   break;
+      int u_int = krusk.at(u);
+      int v_int = krusk.at(v);
+      std::cout << u_int << " --> " << v_int << std::endl;
+      std::cout << forest.find(u_int) << " --> " << forest.find(v_int) << std::endl;
+      if (forest.find(u_int) == forest.find(v_int))
+      {
+        graph.setEdgeLabel(u,v,"MST");
+        std::cout << u << " --> " << v << std::endl;
+        forest.setunion(forest.find(u_int), forest.find(v_int));
+        num++;
+      }
+    }
 }
 
 Edge GraphTools::BFS(Graph& graph, Vertex start, bool weighted)

@@ -22,7 +22,7 @@ void DisjointSets::addelements(int num)
 int DisjointSets::find(int i)
 {
   if (arr_[i] < 0)
-    return i;
+    return arr_[i];
   else
     return find(arr_[i]);
 }
@@ -55,7 +55,7 @@ void DisjointSets::setunion(int a, int b)
 }
 
 /**
- * size 
+ * size
  * DESCRIPTION:
  * INPUTS:
  * OUTPUTS:
