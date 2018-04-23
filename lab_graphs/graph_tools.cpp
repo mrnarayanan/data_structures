@@ -30,7 +30,7 @@ int GraphTools::findMinWeight(Graph& graph)
 {
     //TODO: YOUR CODE HERE
     Vertex start = graph.getStartingVertex();
-    Edge minedge = BFS(graph, start);
+    Edge minedge = BFS(graph, start, true);
     return minedge.getWeight();
 }
 
@@ -59,21 +59,25 @@ int GraphTools::findShortestPath(Graph& graph, Vertex start, Vertex end)
 {
     //TODO: YOUR CODE HERE
     // mask warnings
-    graph.getEdge(start, end);
+//    graph.getEdge(start, end);
 
     int count = 0;
-    Vertex st = graph.getStartingVertex();
-//     BFS(graph, st);
-//
-//     while (true)
-//     {
-//       Vertex parent = parent_map[end];
-// //      graph.setEdgeLabel(parent, end, "MINPATH");
-//       count++;
-//       end = parent;
-//       if (start == parent)
-//         break;
-//     }
+    parent_map.clear();
+    BFS(graph, start, false);
+    for (auto & x : parent_map)
+       std::cout << x.first << ": " << x.second << std::endl;
+
+//    return 0;
+
+    while (true)
+    {
+      Vertex parent = parent_map[end];
+      graph.setEdgeLabel(parent, end, "MINPATH");
+      count++;
+      end = parent;
+      if (start == parent)
+        break;
+    }
     return count;
 }
 
@@ -103,7 +107,7 @@ void GraphTools::findMST(Graph& graph)
     // }
 }
 
-Edge GraphTools::BFS(Graph& graph, Vertex start)
+Edge GraphTools::BFS(Graph& graph, Vertex start, bool weighted)
 {
   // clear everything first
   vector<Vertex> vert = graph.getVertices();
@@ -126,8 +130,6 @@ Edge GraphTools::BFS(Graph& graph, Vertex start)
   int min = INT_MAX;
   Vertex min_start;
   Vertex min_end;
-  bool wt = true;
-  //graph.weighted;
 
   while (!q.empty())
   {
@@ -142,11 +144,11 @@ Edge GraphTools::BFS(Graph& graph, Vertex start)
         graph.setEdgeLabel(v,w,"DISCOVERY");
         graph.setVertexLabel(w, "VISITED");
         q.push(w);
-        parent_map[w] = v;
+        parent_map.emplace(w,v);
       }
       else if (graph.getEdgeLabel(v,w) == "UNEXPLORED")
         graph.setEdgeLabel(v,w,"CROSS");
-      if (wt)
+      if (weighted)
       {
         int weight = graph.getEdgeWeight(v, w);
         if (weight < min)
@@ -158,7 +160,7 @@ Edge GraphTools::BFS(Graph& graph, Vertex start)
       }
     }
   }
-  if (wt)
+  if (weighted)
   {
     graph.setEdgeLabel(min_start, min_end, "MIN");
     return graph.getEdge(min_start, min_end);
