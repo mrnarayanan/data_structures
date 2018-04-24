@@ -24,7 +24,7 @@ int DisjointSets::find(int i)
   if (arr_[i] < 0)
     return i;
   else
-    return find(arr_[i]);
+    return arr_[i] = find(arr_[i]);
 }
 
 /**
@@ -55,7 +55,7 @@ void DisjointSets::setunion(int a, int b)
 }
 
 /**
- * size 
+ * size
  * DESCRIPTION:
  * INPUTS:
  * OUTPUTS:
