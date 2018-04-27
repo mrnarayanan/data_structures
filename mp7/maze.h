@@ -19,7 +19,9 @@ public:
   PNG * drawMaze() const;
   PNG * drawMazeWithSolution();
 private:
-
+//  PNG * maze_pic_;
+  int width_;
+  int height_;
 };
 
 #endif

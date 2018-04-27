@@ -8,6 +8,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <string>
 
 #include "graph.h"
 #include "edge.h"
@@ -21,13 +22,13 @@ public:
    * Constructor to create a game of Nim with `startingTokens` starting tokens.
    *
    * This function creates a graph, `g_` representing all of the states of a
-   * game of Nim with vertex labels "p#t#", where:
+   * game of Nim with vertex labels "p#-X", where:
    * - p# is the current player's turn; p1 for Player 1, p2 for Player2
-   * - t# is the tokens remaining at the start of a player's turn
+   * - X is the tokens remaining at the start of a player's turn
    *
    * For example:
-   *   "p1t4" is Player 1's turn with four (4) tokens remaining
-   *   "p2t8" is Player 2's turn with eight (8) tokens remaining
+   *   "p1-4" is Player 1's turn with four (4) tokens remaining
+   *   "p2-8" is Player 2's turn with eight (8) tokens remaining
    *
    * All legal moves between states are created as edges with initial weights
    * of 0.
