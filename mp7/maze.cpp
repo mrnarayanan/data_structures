@@ -3,9 +3,9 @@
 
 /**
  * SquareMaze
- * DESCRIPTION:
- * INPUTS:
- * OUTPUTS:
+ * DESCRIPTION: SquareMaze constructor
+ * INPUTS: none
+ * OUTPUTS: none
  */
 SquareMaze::SquareMaze()
 {
@@ -14,7 +14,7 @@ SquareMaze::SquareMaze()
 
 /**
  * makeMaze
- * DESCRIPTION:
+ * DESCRIPTION: sets up maze with new dimensions, inits wall vectors
  * INPUTS: int width, int height
  * OUTPUTS: none
  */
@@ -22,43 +22,95 @@ void SquareMaze::makeMaze(int width, int height)
 {
   width_ = width;
   height_ = height;
-
+  rightWalls.resize(width_);
+  downWalls.resize(width_);
+  for (int i = 0; i < width_; i++)
+  {
+    rightWalls[i].resize(height_);
+    downWalls[i].resize(height_);
+  }
 }
 
 /**
  * canTravel
- * DESCRIPTION:
+ * DESCRIPTION: checks bounds and walls to see if can move in that direction
  * INPUTS: int x, int y, int dir
- * OUTPUTS:
+ * OUTPUTS: true if can move in that direction, false if not
  */
 bool SquareMaze::canTravel(int x, int y, int dir) const
 {
-
-
-  return false; // change this
+  if (dir == 0) // right
+  {
+    if (x+1 >= width_ || rightWalls[x][y]) // stepping off maze or if there is wall
+      return false;
+    else
+      return true;
+  }
+  else if (dir == 1) // down
+  {
+    if (y+1 >= height_ || downWalls[x][y]) // stepping off maze or if there is wall
+      return false;
+    else
+      return true;
+  }
+  else if (dir == 2) // left
+  {
+    if (x-1 <= 0 || rightWalls[x-1][y]) // stepping off maze or if there is wall
+      return false;
+    else
+      return true;
+  }
+  else if (dir == 3) // up
+  {
+    if (y-1 <= 0 || downWalls[x][y-1]) // stepping off maze or if there is wall
+      return false;
+    else
+      return true;
+  }
+  else // unrecognized dir
+  {
+    return false;
+  }
 }
 
 /**
  * setWall
- * DESCRIPTION:
- * INPUTS:
- * OUTPUTS:
+ * DESCRIPTION: sets wall vectors to whether wall exists in specified location and direction
+ * INPUTS: int x, int y, int dir, bool exists
+ * OUTPUTS: none
  */
 void SquareMaze::setWall(int x, int y, int dir, bool exists)
 {
-
+    if (dir == 0) // right
+    {
+      if (exists)
+        rightWalls[x][y] = true;
+      else
+        rightWalls[x][y] = false;
+    }
+    else if (dir == 1) // down
+    {
+      if (exists)
+        downWalls[x][y] = true;
+      else
+        downWalls[x][y] = false;
+    }
+    else
+    {
+      return;
+    }
 }
 
 /**
  * solveMaze
  * DESCRIPTION:
- * INPUTS:
- * OUTPUTS:
+ * INPUTS: none
+ * OUTPUTS: vector of direction ints - path to solve maze
  */
 vector<int> SquareMaze::solveMaze()
 {
   vector<int> v;
-
+  
 
 
 
@@ -67,7 +119,7 @@ vector<int> SquareMaze::solveMaze()
 
 /**
  * drawMaze
- * DESCRIPTION:
+ * DESCRIPTION: draws maze without solution in PNG image
  * INPUTS: none
  * OUTPUTS: pointer to PNG with drawn unsolved maze
  */
@@ -115,7 +167,7 @@ PNG * SquareMaze::drawMaze() const
 
 /**
  * drawMazeWithSolution
- * DESCRIPTION:
+ * DESCRIPTION: draws maze with solution in PNG image
  * INPUTS: none
  * OUTPUTS: pointer to PNG with drawn solved maze
  */

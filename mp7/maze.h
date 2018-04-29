@@ -19,9 +19,11 @@ public:
   PNG * drawMaze() const;
   PNG * drawMazeWithSolution();
 private:
-//  PNG * maze_pic_;
   int width_;
   int height_;
+  std::vector<std::vector<bool>> rightWalls;
+  std::vector<std::vector<bool>> downWalls;
+  DisjointSets forest;
 };
 
 #endif
