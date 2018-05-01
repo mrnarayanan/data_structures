@@ -4,6 +4,8 @@
 
 #include "cs225/PNG.h"
 #include <vector>
+#include "dsets.h"
+#include <iostream>
 
 using namespace std;
 using namespace cs225;
@@ -23,7 +25,8 @@ private:
   int height_;
   std::vector<std::vector<bool>> rightWalls;
   std::vector<std::vector<bool>> downWalls;
-  DisjointSets forest;
+  DisjointSets * forest;
+  int convert(int x, int y);
 };
 
 #endif

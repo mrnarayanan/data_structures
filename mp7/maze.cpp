@@ -9,7 +9,7 @@
  */
 SquareMaze::SquareMaze()
 {
-
+  forest = NULL;
 }
 
 /**
@@ -29,6 +29,100 @@ void SquareMaze::makeMaze(int width, int height)
     rightWalls[i].resize(height_);
     downWalls[i].resize(height_);
   }
+  for (int i = 0; i < width_; i++)
+  {
+    for (int j = 0; j < height_; j++)
+    {
+      rightWalls[i][j] = true;
+      downWalls[i][j] = true;
+    }
+  }
+  if (forest != NULL)
+  {
+    delete forest;
+  }
+  forest = new DisjointSets();
+  forest->addelements(width_ * height_);
+  int random;
+  int index, target;
+  int n = 1;
+  int i,j;
+  while (n < width_ * height_)
+  {
+    i = rand() % width_;
+    j = rand() % height_;
+    random = rand() % 2;
+    if (random == 0 && i + 1 < width_) // try to remove right wall
+    {
+      index = convert(i,j);
+      target = convert(i+1,j);
+      if (forest->find(index) != forest->find(target))
+      {
+        rightWalls[i][j] = false;
+        forest->setunion(index, target);
+        n++;
+      }
+    }
+    if (random == 1 && j + 1 < height_) // try to remove down wall
+    {
+      index = convert(i,j);
+      target = convert(i,j+1);
+      if (forest->find(index) != forest->find(target))
+      {
+        downWalls[i][j] = false;
+        forest->setunion(index, target);
+        n++;
+      }
+    }
+//    cout << n << endl;
+  }
+
+  // for (int i = 0; i < width_; i++)
+  // {
+  //   for (int j = 0; j < height_; j++)
+  //   {
+  //     random = rand() % 2;
+  //     if (random == 0 && i + 1 < width_) // try to remove right wall
+  //     {
+  //       index = convert(i,j);
+  //       target = convert(i+1,j);
+  //       if (forest->find(index) != forest->find(target))
+  //       {
+  //         rightWalls[i][j] = false;
+  //         forest->setunion(index, target);
+  //       }
+  //     }
+  //     if (random == 1 && j + 1 < height_) // try to remove down wall
+  //     {
+  //       index = convert(i,j);
+  //       target = convert(i,j+1);
+  //       if (forest->find(index) != forest->find(target))
+  //       {
+  //         downWalls[i][j] = false;
+  //         forest->setunion(index, target);
+  //       }
+  //     }
+  //     // if (random == 2 && i + 1 < width_ && j + 1 < height_) // try to remove both right and down walls
+  //     // {
+  //     //   index = convert(i,j);
+  //     //   target = convert(i+1,j);
+  //     //   if (forest->find(index) != forest->find(target))
+  //     //   {
+  //     //     rightWalls[i][j] = false;
+  //     //     forest->setunion(index, target);
+  //     //   }
+  //     //   target = convert(i,j+1);
+  //     //   if (forest->find(index) != forest->find(target))
+  //     //   {
+  //     //     downWalls[i][j] = false;
+  //     //     forest->setunion(index, target);
+  //     //   }
+  //     // }
+  //   }
+  // }
+
+  delete forest;
+  forest = NULL;
 }
 
 /**
@@ -55,14 +149,14 @@ bool SquareMaze::canTravel(int x, int y, int dir) const
   }
   else if (dir == 2) // left
   {
-    if (x-1 <= 0 || rightWalls[x-1][y]) // stepping off maze or if there is wall
+    if (x-1 < 0 || rightWalls[x-1][y]) // stepping off maze or if there is wall
       return false;
     else
       return true;
   }
   else if (dir == 3) // up
   {
-    if (y-1 <= 0 || downWalls[x][y-1]) // stepping off maze or if there is wall
+    if (y-1 < 0 || downWalls[x][y-1]) // stepping off maze or if there is wall
       return false;
     else
       return true;
@@ -110,8 +204,12 @@ void SquareMaze::setWall(int x, int y, int dir, bool exists)
 vector<int> SquareMaze::solveMaze()
 {
   vector<int> v;
-  
 
+  // BFS - can use pairs, or single dimension ints to represent nodes, edges exist if no wall blocking (canTravel)
+  // keep track of parents for each square
+  // find destination by longest path to bottom
+  // use double dimension vector to keep track of length of path to each node from start
+  // start node is always (0,0)
 
 
   return v;
@@ -141,7 +239,7 @@ PNG * SquareMaze::drawMaze() const
   // create walls for each maze square
   for (int i = 0; i < width_; i++)
   {
-    for (int j = 0; i < height_; j++)
+    for (int j = 0; j < height_; j++)
     {
       if (!canTravel(i,j,0)) // right wall
       {
@@ -256,4 +354,10 @@ PNG * SquareMaze::drawMazeWithSolution()
   }
 
   return maze_pic_;
+}
+
+// helper function to convert double dimensions to single dimension
+int SquareMaze::convert(int x, int y)
+{
+    return x * height_ + y;
 }
