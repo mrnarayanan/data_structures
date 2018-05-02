@@ -12,5 +12,7 @@ int main()
     maze.makeMaze(15,15);
     PNG * pic = maze.drawMaze();
     pic->writeToFile("murutest.PNG");
+    PNG * sol = maze.drawMazeWithSolution();
+    sol->writeToFile("murutestsoln.PNG");
     return 0;
 }

@@ -25,8 +25,11 @@ private:
   int height_;
   std::vector<std::vector<bool>> rightWalls;
   std::vector<std::vector<bool>> downWalls;
+  std::vector<int> bottomRow;
   DisjointSets * forest;
   int convert(int x, int y);
+  void traverse(int x, int y, vector<int> & v);
+  bool pathfinder(int x, int y, vector<int> & v, int xd);
 };
 
 #endif

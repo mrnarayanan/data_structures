@@ -24,10 +24,12 @@ void SquareMaze::makeMaze(int width, int height)
   height_ = height;
   rightWalls.resize(width_);
   downWalls.resize(width_);
+  bottomRow.resize(width_);
   for (int i = 0; i < width_; i++)
   {
     rightWalls[i].resize(height_);
     downWalls[i].resize(height_);
+    bottomRow[i] = 0;
   }
   for (int i = 0; i < width_; i++)
   {
@@ -74,53 +76,7 @@ void SquareMaze::makeMaze(int width, int height)
         n++;
       }
     }
-//    cout << n << endl;
   }
-
-  // for (int i = 0; i < width_; i++)
-  // {
-  //   for (int j = 0; j < height_; j++)
-  //   {
-  //     random = rand() % 2;
-  //     if (random == 0 && i + 1 < width_) // try to remove right wall
-  //     {
-  //       index = convert(i,j);
-  //       target = convert(i+1,j);
-  //       if (forest->find(index) != forest->find(target))
-  //       {
-  //         rightWalls[i][j] = false;
-  //         forest->setunion(index, target);
-  //       }
-  //     }
-  //     if (random == 1 && j + 1 < height_) // try to remove down wall
-  //     {
-  //       index = convert(i,j);
-  //       target = convert(i,j+1);
-  //       if (forest->find(index) != forest->find(target))
-  //       {
-  //         downWalls[i][j] = false;
-  //         forest->setunion(index, target);
-  //       }
-  //     }
-  //     // if (random == 2 && i + 1 < width_ && j + 1 < height_) // try to remove both right and down walls
-  //     // {
-  //     //   index = convert(i,j);
-  //     //   target = convert(i+1,j);
-  //     //   if (forest->find(index) != forest->find(target))
-  //     //   {
-  //     //     rightWalls[i][j] = false;
-  //     //     forest->setunion(index, target);
-  //     //   }
-  //     //   target = convert(i,j+1);
-  //     //   if (forest->find(index) != forest->find(target))
-  //     //   {
-  //     //     downWalls[i][j] = false;
-  //     //     forest->setunion(index, target);
-  //     //   }
-  //     // }
-  //   }
-  // }
-
   delete forest;
   forest = NULL;
 }
@@ -197,22 +153,28 @@ void SquareMaze::setWall(int x, int y, int dir, bool exists)
 
 /**
  * solveMaze
- * DESCRIPTION:
+ * DESCRIPTION: places destination and determines path to solve maze
  * INPUTS: none
  * OUTPUTS: vector of direction ints - path to solve maze
  */
 vector<int> SquareMaze::solveMaze()
 {
-  vector<int> v;
+  vector<int> directions;
+  traverse(0, 0, directions); // start square is always (0,0)
 
-  // BFS - can use pairs, or single dimension ints to represent nodes, edges exist if no wall blocking (canTravel)
-  // keep track of parents for each square
-  // find destination by longest path to bottom
-  // use double dimension vector to keep track of length of path to each node from start
-  // start node is always (0,0)
+  // find square in bottom row with longest path length
+  int index = 0; // will store x coordinate of destination in bottom row
+  for (int i = 0; i < (int) bottomRow.size(); i++)
+  {
+    if (bottomRow[i] > bottomRow[index]) // tiebreaker automatically handled
+    {
+      index = i;
+    }
+  }
 
-
-  return v;
+  vector<int> ret;
+  pathfinder(0, 0, ret, index); // populate ret with path to exit
+  return ret;
 }
 
 /**
@@ -360,4 +322,123 @@ PNG * SquareMaze::drawMazeWithSolution()
 int SquareMaze::convert(int x, int y)
 {
     return x * height_ + y;
+}
+
+// helper function to perform traversal on maze to place exit
+void SquareMaze::traverse(int x, int y, vector<int> & v)
+{
+  if (y == height_ - 1) // reached bottom row
+  {
+    bottomRow[x] = v.size();
+  }
+
+  if (canTravel(x, y, 0)) // right
+	{
+		v.push_back(0);
+		rightWalls[x][y] = true; // prevent from going back, mark as "visited"
+		traverse(x + 1, y, v); // go right
+		v.pop_back();
+		rightWalls[x][y] = false; // restore maze to original configuration
+	}
+
+	if (canTravel(x, y, 1)) // down
+	{
+		v.push_back(1);
+		downWalls[x][y] = true; // prevent from going back, mark as "visited"
+    traverse(x, y + 1, v); // go down
+		v.pop_back();
+		downWalls[x][y] = false; // restore maze to original configuration
+	}
+
+	if (canTravel(x, y, 2)) // left
+	{
+		v.push_back(2);
+		rightWalls[x-1][y] = true; // prevent from going back, mark as "visited"
+		traverse(x - 1, y, v); // go left
+		v.pop_back();
+		rightWalls[x-1][y] = false; // restore maze to original configuration
+	}
+
+	if (canTravel(x, y, 3)) // up
+	{
+		v.push_back(3);
+		downWalls[x][y-1] = true; // prevent from going back, mark as "visited"
+		traverse(x, y - 1, v); // go up
+		v.pop_back();
+		downWalls[x][y-1] = false; // restore maze to original configuration
+	}
+}
+
+// helper function to find path to maze exit
+bool SquareMaze::pathfinder(int x, int y, vector<int> & v, int xd)
+{
+	if (x == xd && y == height_ - 1) // reached destination square
+  {
+    return true;
+  }
+
+	if (canTravel(x, y, 0)) // right
+	{
+		v.push_back(0);
+		rightWalls[x][y] = true; // mark as "visited"
+		if (pathfinder(x + 1, y, v, xd))
+		{
+			rightWalls[x][y] = false; // restore maze to original configuration
+			return true;
+		}
+    else
+    {
+      v.pop_back(); // took wrong turn
+  		rightWalls[x][y] = false; // restore maze to original configuration
+    }
+	}
+
+	if (canTravel(x, y, 1)) // down
+	{
+		v.push_back(1);
+		downWalls[x][y] = true; // mark as "visited"
+		if (pathfinder(x, y + 1, v, xd))
+		{
+			downWalls[x][y] = false; // restore maze to original configuration
+			return true;
+		}
+    else
+    {
+      v.pop_back(); // took wrong turn
+      downWalls[x][y] = false; // restore maze to original configuration
+    }
+	}
+
+	if (canTravel(x, y, 2)) // left
+	{
+		v.push_back(2);
+		rightWalls[x-1][y] = true; // mark as "visited"
+		if (pathfinder(x - 1, y, v, xd))
+		{
+			rightWalls[x-1][y] = false; // restore maze to original configuration
+			return true;
+		}
+    else
+    {
+      v.pop_back(); // took wrong turn
+      rightWalls[x-1][y] = false; // restore maze to original configuration
+    }
+	}
+
+	if (canTravel(x, y, 3)) // up
+	{
+		v.push_back(3);
+		downWalls[x][y-1] = true; // mark as "visited"
+		if (pathfinder(x, y - 1, v, xd))
+		{
+			downWalls[x][y-1] = false; // restore maze to original configuration
+			return true;
+		}
+    else
+    {
+      v.pop_back(); // took wrong turn
+      downWalls[x][y-1] = false; // restore maze to original configuration
+    }
+	}
+	return false;
 }
